@@ -1,14 +1,44 @@
+import numpy
+import math
+
 class Vectors:
     # Pass in a list of readlines
-    def __init__(self, *data):
+    def __init__(self, data, similarity, normalize):
         self.vectors = {}
+        self.similarity = similarity
         for line in data:
-            key = (float(cell) for cell in data.split(' ')[1:])
-            self.vectors.update({key:data.split(' ')[0]})
+            line = line.strip('\n')
+            key = numpy.array([float(cell) for cell in line.split(' ')[1:]])
+            self.vectors.update({key:line.split(' ')[0]})
+        if normalize:
+            for word, vector in self.vectors.items():
+                length = sqrt(sum([element**2 for element in vector]))
+                self.vectors[word] = [element/length for element in vector]
 
     def __str__(self):
-        return '\n'.join([word + ': ' str(key) for key, 
+        return '\n'.join([word + ': ' + str(key) for key, 
          word in self.vectors.items()])
+
+#    def euclidian(self, vector):
+
+#    def manhattan(self, vector):
+
+#    def cosine(self, vector):
+
+    def d_val(self, problem):
+        d_vec = problem.base_pair[1] - problem.base_pair[0]
+        d_vec += problem.sec_pair[0]
+        d_word = self.euclidian(d_vec) if self.similarity == 0 else \
+         self.manhattan(d_vec) if self.simliarity == 1 else \
+         self.cosine(d_vec)
+        problem.solve(d_word)
+        return problem
+        
+#nvrmnd we can use numpy
+#    def d_vector(self, a_vec, b_vec, c_vec):
+#        return tuple(c_vec[i] + b_vec[i] - a_vec[i] \
+#         for i in range(0, a_vec(length))
+        
 
         
         

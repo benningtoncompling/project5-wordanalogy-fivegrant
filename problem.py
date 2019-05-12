@@ -1,4 +1,4 @@
-class Problem:
+class Problem::x
     def __init__(self, *elements):
         self.base_pair = (elements[0], elements[1])
         try:
@@ -20,4 +20,7 @@ class Problem:
 
     def blind(self):
         return Problem(self.base_pair[0], self.base_pair[1], self.sec_pair[0])
+
+    def solve(self, solution):
+        self.sec_pair = (self.sec_pair[0], solution)
 
