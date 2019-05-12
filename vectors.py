@@ -19,11 +19,29 @@ class Vectors:
         return '\n'.join([word + ': ' + str(key) for key, 
          word in self.vectors.items()])
 
-#    def euclidian(self, vector):
+    def euclidian(self, compare):
+        distances = {}
+        for word, vector in self.vectors:
+            distance = sqrt(sum(element**2 for element in (vector - compare)))
+        word_ref = min(distances.keys())
+        return distances[word_ref]
 
-#    def manhattan(self, vector):
+    def manhattan(self, compare):
+        distances = {}
+        for word, vector in self.vectors:
+            distance = sum(for element in (vector - compare))
+        word_ref = min(distances.keys())
+        return distances[word_ref]
 
-#    def cosine(self, vector):
+# https://en.m.wikipedia.org/wiki/Cosine_similarity
+    def cosine(self, compare):
+        distances = {}
+        for word, vector in self.vectors:
+            denominator = sqrt(sum([element**2 for element in vector])) * \
+             sqrt(sum([element**2 for element in compare]))
+            distance = vector.dot(compare)/denominator
+        word_ref = max(distances.keys())
+        return distances[word_ref]
 
     def d_val(self, problem):
         d_vec = problem.base_pair[1] - problem.base_pair[0]
