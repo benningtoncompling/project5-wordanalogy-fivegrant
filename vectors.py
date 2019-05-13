@@ -1,5 +1,5 @@
-import numpy
-import math
+from math import *
+from numpy import array
 
 class Vectors:
     # Pass in a list of readlines
@@ -8,46 +8,54 @@ class Vectors:
         self.similarity = similarity
         for line in data:
             line = line.strip('\n')
-            key = numpy.array([float(cell) for cell in line.split(' ')[1:]])
-            self.vectors.update({key:line.split(' ')[0]})
+            vec = [float(cell) for cell in line.split(' ')[1:]]
+            self.vectors.update({line.split(' ')[0]: vec})
         if normalize:
             for word, vector in self.vectors.items():
                 length = sqrt(sum([element**2 for element in vector]))
                 self.vectors[word] = [element/length for element in vector]
 
     def __str__(self):
-        return '\n'.join([word + ': ' + str(key) for key, 
-         word in self.vectors.items()])
+        spit = ''
+        for word, vec in self.vectors.items():
+            processed = str([str(element) for element in list(vec)])
+            spit += word + ': ' + processed + '\n'
+        return spit
 
     def euclidian(self, compare):
         distances = {}
-        for word, vector in self.vectors:
-            distance = sqrt(sum(element**2 for element in (vector - compare)))
+        for word, vector in self.vectors.items():
+            distance = sqrt(sum(element**2 for element in \
+             (array(vector) - compare)))
+            distances.update({word:distance})
         word_ref = min(distances.keys())
         return distances[word_ref]
 
     def manhattan(self, compare):
         distances = {}
-        for word, vector in self.vectors:
-            distance = sum(for element in (vector - compare))
+        for word, vector in self.vectors.items():
+            distance = sum(element for element in (array(vector) - compare))
+            distances.update({word:distance})
         word_ref = min(distances.keys())
         return distances[word_ref]
 
 # https://en.m.wikipedia.org/wiki/Cosine_similarity
     def cosine(self, compare):
         distances = {}
-        for word, vector in self.vectors:
-            denominator = sqrt(sum([element**2 for element in vector])) * \
-             sqrt(sum([element**2 for element in compare]))
-            distance = vector.dot(compare)/denominator
+        for word, vector in self.vectors.items():
+            denom = sqrt(sum([element**2 for element in array(vector)])) \
+             * sqrt(sum([element**2 for element in compare]))
+            distance = array(vector).dot(compare)/denom
+            distances.update({word:distance})
         word_ref = max(distances.keys())
         return distances[word_ref]
 
     def d_val(self, problem):
-        d_vec = problem.base_pair[1] - problem.base_pair[0]
-        d_vec += problem.sec_pair[0]
+        d_vec = array(self.vectors[problem.base_pair[1]]) - \
+         array(self.vectors[problem.base_pair[0]])
+        d_vec += array(self.vectors[problem.sec_pair[0]])
         d_word = self.euclidian(d_vec) if self.similarity == 0 else \
-         self.manhattan(d_vec) if self.simliarity == 1 else \
+         self.manhattan(d_vec) if self.similarity == 1 else \
          self.cosine(d_vec)
         problem.solve(d_word)
         return problem

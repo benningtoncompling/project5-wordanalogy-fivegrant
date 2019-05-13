@@ -14,12 +14,12 @@ class Problem:
         return self.sec_pair[1] == None and compare.sec_pair[1] != None
 
     def __str__(self):
-        return " ".join(
-         self.base_pair[0], self.base_pair[1], 
-         self.sec_pair[0], self.sec_pair[1]) + '\n'
+        return " ".join([
+         str(self.base_pair[0]), str(self.base_pair[1]), 
+         str(self.sec_pair[0]), str(self.sec_pair[1])]) + '\n'
 
     def blind(self):
-        return Problem(self.base_pair[0], self.base_pair[1], self.sec_pair[0])
+        return Problem([self.base_pair[0], self.base_pair[1], self.sec_pair[0]])
 
     def solve(self, solution):
         self.sec_pair = (self.sec_pair[0], solution)
