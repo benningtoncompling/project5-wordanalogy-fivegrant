@@ -27,5 +27,3 @@ for access in os.listdir(sys.argv[2]):
                  str(correct[0]/correct[1]) + '(' + str(correct[0]) + \
                  '/' + str(correct[1]))
                 
-
-            

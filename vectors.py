@@ -10,7 +10,7 @@ class Vectors:
             line = line.strip('\n')
             vec = [float(cell) for cell in line.split(' ')[1:]]
             self.vectors.update({line.split(' ')[0]: vec})
-        if normalize:
+        if bool(normalize):
             for word, vector in self.vectors.items():
                 length = sqrt(sum([element**2 for element in vector]))
                 self.vectors[word] = [element/length for element in vector]
@@ -25,9 +25,10 @@ class Vectors:
     def euclidian(self, compare):
         distances = {}
         for word, vector in self.vectors.items():
+            #if list(compare) != vector:
             distance = sqrt(sum(element**2 for element in \
              (array(vector) - compare)))
-            distances.update({word:distance})
+            distances.update({distance:word})
         word_ref = min(distances.keys())
         return distances[word_ref]
 
@@ -35,7 +36,7 @@ class Vectors:
         distances = {}
         for word, vector in self.vectors.items():
             distance = sum(element for element in (array(vector) - compare))
-            distances.update({word:distance})
+            distances.update({distance:word})
         word_ref = min(distances.keys())
         return distances[word_ref]
 
@@ -46,7 +47,7 @@ class Vectors:
             denom = sqrt(sum([element**2 for element in array(vector)])) \
              * sqrt(sum([element**2 for element in compare]))
             distance = array(vector).dot(compare)/denom
-            distances.update({word:distance})
+            distances.update({distance:word})
         word_ref = max(distances.keys())
         return distances[word_ref]
 
@@ -54,8 +55,8 @@ class Vectors:
         d_vec = array(self.vectors[problem.base_pair[1]]) - \
          array(self.vectors[problem.base_pair[0]])
         d_vec += array(self.vectors[problem.sec_pair[0]])
-        d_word = self.euclidian(d_vec) if self.similarity == 0 else \
-         self.manhattan(d_vec) if self.similarity == 1 else \
+        d_word = self.euclidian(d_vec) if self.similarity == '0' else \
+         self.manhattan(d_vec) if self.similarity == '1' else \
          self.cosine(d_vec)
         problem.solve(d_word)
         return problem
