@@ -20,10 +20,10 @@ for access in os.listdir(sys.argv[2]):
                         correct[0] += 1
                     output.write(str(guess))
                 
-            eval_file = os.path.join(sys.argv[3], 'eval.txt')
-            with open(output, 'w') as evaluation:
-                evalutation.write(access)
-                evalutation.write('ACCURACY TOP1: ' + \
+            eval_file = sys.argv[3] + '/eval.txt'
+            with open(eval_file, 'w') as eval:
+                eval.write(access)
+                eval.write('ACCURACY TOP1: ' + \
                  str(correct[0]/correct[1]) + '(' + str(correct[0]) + \
                  '/' + str(correct[1]))
                 
