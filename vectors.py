@@ -1,19 +1,19 @@
 from math import *
-from numpy import array
+import numpy
 
 class Vectors:
     # Pass in a list of readlines
     def __init__(self, data, similarity, normalize):
         self.vectors = {}
-        self.similarity = similarity
+        self.similarity = int(similarity)
         for line in data:
             line = line.strip('\n')
             vec = [float(cell) for cell in line.split(' ')[1:]]
-            self.vectors.update({line.split(' ')[0]: vec})
+            self.vectors.update({line.split(' ')[0]: numpy.array(vec)})
         if bool(normalize):
             for word, vector in self.vectors.items():
                 length = sqrt(sum([element**2 for element in vector]))
-                self.vectors[word] = [element/length for element in vector]
+                self.vectors[word] = numpy.array([element/length for element in vector])
 
     def __str__(self):
         spit = ''
@@ -22,50 +22,43 @@ class Vectors:
             spit += word + ': ' + processed + '\n'
         return spit
 
-    def euclidian(self, compare):
-        distances = {}
-        for word, vector in self.vectors.items():
-            #if list(compare) != vector:
-            distance = sqrt(sum(element**2 for element in \
-             (array(vector) - compare)))
-            distances.update({distance:word})
-        word_ref = min(distances.keys())
-        return distances[word_ref]
-
-    def manhattan(self, compare):
-        distances = {}
-        for word, vector in self.vectors.items():
-            distance = sum(element for element in (array(vector) - compare))
-            distances.update({distance:word})
-        word_ref = min(distances.keys())
-        return distances[word_ref]
-
-# https://en.m.wikipedia.org/wiki/Cosine_similarity
-    def cosine(self, compare):
-        distances = {}
-        for word, vector in self.vectors.items():
-            denom = sqrt(sum([element**2 for element in array(vector)])) \
-             * sqrt(sum([element**2 for element in compare]))
-            distance = array(vector).dot(compare)/denom
-            distances.update({distance:word})
-        word_ref = max(distances.keys())
-        return distances[word_ref]
-
     def d_val(self, problem):
-        d_vec = array(self.vectors[problem.base_pair[1]]) - \
-         array(self.vectors[problem.base_pair[0]])
-        d_vec += array(self.vectors[problem.sec_pair[0]])
-        d_word = self.euclidian(d_vec) if self.similarity == '0' else \
-         self.manhattan(d_vec) if self.similarity == '1' else \
-         self.cosine(d_vec)
-        problem.solve(d_word)
-        return problem
-        
-#nvrmnd we can use numpy
-#    def d_vector(self, a_vec, b_vec, c_vec):
-#        return tuple(c_vec[i] + b_vec[i] - a_vec[i] \
-#         for i in range(0, a_vec(length))
-        
+        try:
+            d_vec = self.vectors[problem.base_pair[1]] - \
+             self.vectors[problem.base_pair[0]]
+            d_vec += self.vectors[problem.sec_pair[0]]
+             
+            distances = {}
+            distance = None
+            for word, vector in self.vectors.items():
+                #el means element
 
-        
+                # Euclidian
+                if self.similarity == 0:
+                    distance = sqrt(numpy.sum(numpy.square(vector - d_vec)))
+
+                # Manhattan 
+                elif self.similarity == 1:
+                    distance = numpy.sum(vector - d_vec)
+
+                # Cosine
+                ## https://en.m.wikipedia.org/wiki/Cosine_similarity
+                ## Said we could just do dot product in class
+                else:
+                    distance = vector.dot(d_vec)
+
+                distances.update({distance:word})
+
+            word_ref = None
+            if self.similarity > 1:
+                word_ref = max(distances.keys())
+            else:
+                word_ref = min(distances.keys())
+            d_word = distances[word_ref]
+            problem.solve(d_word)
+            return problem
+
+        except KeyError: 
+            problem.solve("FAILURE")
+            return problem
         

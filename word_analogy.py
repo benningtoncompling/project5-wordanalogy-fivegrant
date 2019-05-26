@@ -9,6 +9,7 @@ with open(sys.argv[1]) as file:
 
 for access in os.listdir(sys.argv[2]):
     if access.endswith('.txt'):
+        print(access)
         with open(os.path.join(sys.argv[2], access), 'r') as file:
             with open(os.path.join(sys.argv[3], access), 'w') as output:
                 correct = [0,0]
@@ -21,9 +22,6 @@ for access in os.listdir(sys.argv[2]):
                     output.write(str(guess))
                 
             eval_file = sys.argv[3] + '/eval.txt'
-            with open(eval_file, 'w') as eval:
+            with open(eval_file, 'a') as eval:
                 eval.write(access)
-                eval.write('ACCURACY TOP1: ' + \
-                 str(correct[0]/correct[1]) + '(' + str(correct[0]) + \
-                 '/' + str(correct[1]))
-                
+                eval.write(f'\nACCURACY TOP1: {correct[0]/correct[1]} ({correct[0]}/{correct[1]})\n')
