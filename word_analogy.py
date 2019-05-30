@@ -11,13 +11,13 @@ for access in os.listdir(sys.argv[2]):
     if access.endswith('.txt'):
         print(access)
         with open(os.path.join(sys.argv[2], access), 'r') as file:
+            correct = [0,0]
             with open(os.path.join(sys.argv[3], access), 'w') as output:
-                correct = [0,0]
                 for line in file.readlines():
                     correct[1] += 1
                     analogy = Problem(line.split(' '))
                     guess =  vector_content.d_val(analogy.blind())
-                    if analogy == guess:
+                    if analogy.quick_check(guess):
                         correct[0] += 1
                     output.write(str(guess))
                 

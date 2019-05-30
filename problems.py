@@ -18,6 +18,9 @@ class Problem:
          str(self.base_pair[0]), str(self.base_pair[1]), 
          str(self.sec_pair[0]), str(self.sec_pair[1])]) + '\n'
 
+    def quick_check(self, compare):
+        return self.sec_pair[1] == compare.sec_pair[1]
+
     def blind(self):
         return Problem([self.base_pair[0], self.base_pair[1], self.sec_pair[0]])
 
