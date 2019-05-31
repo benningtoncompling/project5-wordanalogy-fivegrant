@@ -17,11 +17,11 @@ for access in os.listdir(sys.argv[2]):
                     correct[1] += 1
                     analogy = Problem(line.split(' '))
                     guess =  vector_content.d_val(analogy.blind())
-                    if analogy.quick_check(guess):
+                    if analogy.quality_check(guess):
                         correct[0] += 1
                     output.write(str(guess))
                 
             eval_file = sys.argv[3] + '/eval.txt'
             with open(eval_file, 'a') as eval:
                 eval.write(access)
-                eval.write(f'\nACCURACY TOP1: {correct[0]/correct[1]} ({correct[0]}/{correct[1]})\n')
+                eval.write(f'\nACCURACY TOP1: {correct[0]/correct[1]}% ({correct[0]}/{correct[1]})\n')
